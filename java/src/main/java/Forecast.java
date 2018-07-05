@@ -24,8 +24,7 @@ public class Forecast {
     private static final String JSON_FIELD_WEATHER = "weather_state_name";
 
     public String predict(String city, Date datetime, boolean wind) throws IOException {
-        // If there are predictions
-        if (!datetime.before(new Date(new Date().getTime() + (ONE_DAY * 6)))) {
+        if (!isPredictionAvailable(datetime)) {
             return "";
         }
 
@@ -64,5 +63,11 @@ public class Forecast {
         }
 
         return "";
+    }
+
+    private boolean isPredictionAvailable(Date datetime) {
+        long today = new Date().getTime();
+        Date oneWeekLater = new Date(today + (ONE_DAY * 6));
+        return datetime.before(oneWeekLater);
     }
 }
