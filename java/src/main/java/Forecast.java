@@ -19,8 +19,6 @@ public class Forecast {
         if(prediction == null){
             return "";
         }
-
-        // If we have to return the wind information
         return prediction.getWeather();
     }
 
@@ -31,8 +29,6 @@ public class Forecast {
         if(prediction == null){
             return "";
         }
-
-        // If we have to return the wind information
         return prediction.getWind();
     }
 
