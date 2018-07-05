@@ -1,4 +1,3 @@
-import java.text.ParseException;
 import java.util.Date;
 
 public class Forecast {
@@ -16,9 +15,6 @@ public class Forecast {
     public String predictWeather(String city, Date datetime) throws Exception {
         Date date = checkDate(datetime);
         Prediction prediction = this.service.predict(city, date);
-        if(prediction == null){
-            return "";
-        }
         return prediction.getWeather();
     }
 
@@ -26,9 +22,6 @@ public class Forecast {
     public String predictWind(String city, Date datetime) throws Exception {
         Date date = checkDate(datetime);
         Prediction prediction = this.service.predict(city, date);
-        if(prediction == null){
-            return "";
-        }
         return prediction.getWind();
     }
 
