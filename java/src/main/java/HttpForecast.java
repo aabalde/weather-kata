@@ -29,7 +29,7 @@ public class HttpForecast implements IForecast {
     @Override
     public Prediction predict(String city, Date date) throws Exception {
         if (!isPredictionAvailable(date)) {
-            return null;
+            throw new ForecastException("Prediction not available. Exceeds the 5 days limit");
         }
 
         String cityId = getCityId(city);
@@ -43,17 +43,15 @@ public class HttpForecast implements IForecast {
     }
 
 
-    private JSONObject getPrediction(Date date, JSONArray predictions) throws ParseException {
-        JSONObject prediction = null;
+    private JSONObject getPrediction(Date date, JSONArray predictions) throws ParseException, ForecastException {
         for (int i = 0; i < predictions.length(); i++) {
             JSONObject currentPrediction = predictions.getJSONObject(i);
             String currentDate = currentPrediction.get(JSON_FIELD_DATE).toString();
             if (date.equals(format.parse(currentDate))) {
-                prediction = currentPrediction;
-                break;
+                return currentPrediction;
             }
         }
-        return prediction;
+        throw new ForecastException("Prediction not found for the date provided");
     }
 
     private String doHttpRequest(String url, String param) throws IOException {
