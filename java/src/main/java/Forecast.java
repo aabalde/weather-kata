@@ -32,7 +32,9 @@ public class Forecast {
 
         // If there are predictions
 
-        if (datetime.before(new Date(new Date().getTime() + (ONE_DAY * 6)))) {
+        if (!datetime.before(new Date(new Date().getTime() + (ONE_DAY * 6)))) {
+            return "";
+        } else {
 
             // Find the id of the city on metawheather
             HttpRequestFactory requestFactory
@@ -61,8 +63,6 @@ public class Forecast {
                     }
                 }
             }
-        } else {
-            return "";
         }
         return "";
     }
