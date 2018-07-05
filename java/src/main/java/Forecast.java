@@ -27,17 +27,7 @@ public class Forecast {
     private SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT);
 
     public String predictWeather(String city, Date datetime) throws IOException, ParseException {
-        Date date = checkDate(datetime);
-        if (!isPredictionAvailable(date)) {
-            return "";
-        }
-
-        String cityId = getCityId(city);
-        JSONArray predictions = getOneWeekPredictions(cityId);
-
-
-        JSONObject prediction = getPrediction(date, predictions);
-
+        JSONObject prediction = getPrediction(city, datetime);
         if(prediction == null){
             return "";
         }
@@ -47,23 +37,25 @@ public class Forecast {
     }
 
     public String predictWind(String city, Date datetime) throws IOException, ParseException {
-        Date date = checkDate(datetime);
-        if (!isPredictionAvailable(date)) {
-            return "";
-        }
-
-        String cityId = getCityId(city);
-        JSONArray predictions = getOneWeekPredictions(cityId);
-
-
-        JSONObject prediction = getPrediction(date, predictions);
-
+        JSONObject prediction = getPrediction(city, datetime);
         if(prediction == null){
             return "";
         }
 
         // If we have to return the wind information
         return prediction.get(JSON_FIELD_WIND).toString();
+    }
+
+    private JSONObject getPrediction(String city, Date datetime) throws IOException, ParseException {
+        Date date = checkDate(datetime);
+        if (!isPredictionAvailable(date)) {
+            return null;
+        }
+
+        String cityId = getCityId(city);
+        JSONArray predictions = getOneWeekPredictions(cityId);
+        JSONObject prediction = getPrediction(date, predictions);
+        return prediction;
     }
 
     private JSONObject getPrediction(Date date, JSONArray predictions) throws ParseException {
