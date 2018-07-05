@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -25,7 +26,7 @@ public class Forecast {
 
     private SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT);
 
-    public String predict(String city, Date datetime, boolean wind) throws IOException {
+    public String predict(String city, Date datetime, boolean wind) throws IOException, ParseException {
         Date date = checkDate(datetime);
         if (!isPredictionAvailable(date)) {
             return "";
@@ -34,19 +35,28 @@ public class Forecast {
         String cityId = getCityId(city);
         JSONArray predictions = getOneWeekPredictions(cityId);
 
-        for (int i = 0; i < prediction.length(); i++) {
+
+        JSONObject prediction = null;
+        for (int i = 0; i < predictions.length(); i++) {
 //            // When the date is the expected
-            if (format.equals(prediction.getJSONObject(i).get(JSON_FIELD_DATE).toString())) {
+            JSONObject currentPrediction = predictions.getJSONObject(i);
+            String currentDate = currentPrediction.get(JSON_FIELD_DATE).toString();
+            if (date.equals(format.parse(currentDate))) {
 //                // If we have to return the wind information
-                if (wind) {
-                    return prediction.getJSONObject(i).get(JSON_FIELD_WIND).toString();
-                } else {
-                    return prediction.getJSONObject(i).get(JSON_FIELD_WEATHER).toString();
-                }
+                prediction = currentPrediction;
+                break;
             }
         }
 
-        return "";
+        if(prediction == null){
+            return "";
+        }
+
+        if (wind) {
+            return prediction.get(JSON_FIELD_WIND).toString();
+        } else {
+            return prediction.get(JSON_FIELD_WEATHER).toString();
+        }
     }
 
     private JSONArray getOneWeekPredictions(String cityId) throws IOException {
