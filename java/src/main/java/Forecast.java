@@ -31,17 +31,7 @@ public class Forecast {
             return "";
         }
         String woeid = getCityId(city);
-        HttpRequestFactory requestFactory;
-        HttpRequest request;
-        String rawResponse;
-
-
-        // Find the predictions for the city
-        requestFactory = new NetHttpTransport().createRequestFactory();
-        request = requestFactory.buildGetRequest(
-                new GenericUrl(URL_PREDICT_WEATHER + woeid));
-        rawResponse = request.execute().parseAsString();
-        JSONArray results = new JSONObject(rawResponse).getJSONArray(JSON_FIELD_PREDICTION);
+        JSONArray results = getPrediction(woeid);
 
         for (int i = 0; i < results.length(); i++) {
 //            // When the date is the expected
@@ -56,6 +46,15 @@ public class Forecast {
         }
 
         return "";
+    }
+
+    private JSONArray getPrediction(String woeid) throws IOException {
+        // Find the predictions for the city
+        HttpRequestFactory requestFactory = new NetHttpTransport().createRequestFactory();
+        HttpRequest request = requestFactory.buildGetRequest(
+                new GenericUrl(URL_PREDICT_WEATHER + woeid));
+        String rawResponse = request.execute().parseAsString();
+        return new JSONObject(rawResponse).getJSONArray(JSON_FIELD_PREDICTION);
     }
 
     private String getCityId(String city) throws IOException {
