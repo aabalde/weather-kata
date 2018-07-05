@@ -36,27 +36,31 @@ public class Forecast {
         JSONArray predictions = getOneWeekPredictions(cityId);
 
 
-        JSONObject prediction = null;
-        for (int i = 0; i < predictions.length(); i++) {
-//            // When the date is the expected
-            JSONObject currentPrediction = predictions.getJSONObject(i);
-            String currentDate = currentPrediction.get(JSON_FIELD_DATE).toString();
-            if (date.equals(format.parse(currentDate))) {
-//                // If we have to return the wind information
-                prediction = currentPrediction;
-                break;
-            }
-        }
+        JSONObject prediction = getPrediction(date, predictions);
 
         if(prediction == null){
             return "";
         }
 
+        // If we have to return the wind information
         if (wind) {
             return prediction.get(JSON_FIELD_WIND).toString();
         } else {
             return prediction.get(JSON_FIELD_WEATHER).toString();
         }
+    }
+
+    private JSONObject getPrediction(Date date, JSONArray predictions) throws ParseException {
+        JSONObject prediction = null;
+        for (int i = 0; i < predictions.length(); i++) {
+            JSONObject currentPrediction = predictions.getJSONObject(i);
+            String currentDate = currentPrediction.get(JSON_FIELD_DATE).toString();
+            if (date.equals(format.parse(currentDate))) {
+                prediction = currentPrediction;
+                break;
+            }
+        }
+        return prediction;
     }
 
     private JSONArray getOneWeekPredictions(String cityId) throws IOException {
