@@ -26,6 +26,7 @@ public class Forecast {
 
     private SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT);
 
+    
     public String predictWeather(String city, Date datetime) throws IOException, ParseException {
         JSONObject prediction = getPrediction(city, datetime);
         if(prediction == null){
@@ -36,6 +37,7 @@ public class Forecast {
         return prediction.get(JSON_FIELD_WEATHER).toString();
     }
 
+
     public String predictWind(String city, Date datetime) throws IOException, ParseException {
         JSONObject prediction = getPrediction(city, datetime);
         if(prediction == null){
@@ -45,6 +47,7 @@ public class Forecast {
         // If we have to return the wind information
         return prediction.get(JSON_FIELD_WIND).toString();
     }
+
 
     private JSONObject getPrediction(String city, Date datetime) throws IOException, ParseException {
         Date date = checkDate(datetime);
@@ -57,6 +60,7 @@ public class Forecast {
         JSONObject prediction = getPrediction(date, predictions);
         return prediction;
     }
+
 
     private JSONObject getPrediction(Date date, JSONArray predictions) throws ParseException {
         JSONObject prediction = null;
@@ -71,6 +75,7 @@ public class Forecast {
         return prediction;
     }
 
+
     private JSONArray getOneWeekPredictions(String cityId) throws IOException {
         HttpRequestFactory requestFactory = new NetHttpTransport().createRequestFactory();
         HttpRequest request = requestFactory.buildGetRequest(
@@ -78,6 +83,7 @@ public class Forecast {
         String rawResponse = request.execute().parseAsString();
         return new JSONObject(rawResponse).getJSONArray(JSON_FIELD_PREDICTION);
     }
+
 
     private String getCityId(String city) throws IOException {
         HttpRequestFactory requestFactory
@@ -89,11 +95,13 @@ public class Forecast {
         return jsonArray.getJSONObject(0).get(JSON_FIELD_CITY_ID).toString();
     }
 
+
     private boolean isPredictionAvailable(Date datetime) {
         long today = new Date().getTime();
         Date oneWeekLater = new Date(today + (ONE_DAY * 6));
         return datetime.before(oneWeekLater);
     }
+
 
     private Date checkDate(Date datetime){
         if (datetime == null) {
