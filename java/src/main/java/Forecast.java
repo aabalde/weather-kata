@@ -30,17 +30,17 @@ public class Forecast {
         if (!isPredictionAvailable(date)) {
             return "";
         }
-        String woeid = getCityId(city);
-        JSONArray results = getPrediction(woeid);
+        String cityId = getCityId(city);
+        JSONArray prediction = getPrediction(cityId);
 
-        for (int i = 0; i < results.length(); i++) {
+        for (int i = 0; i < prediction.length(); i++) {
 //            // When the date is the expected
-            if (format.equals(results.getJSONObject(i).get(JSON_FIELD_DATE).toString())) {
+            if (format.equals(prediction.getJSONObject(i).get(JSON_FIELD_DATE).toString())) {
 //                // If we have to return the wind information
                 if (wind) {
-                    return results.getJSONObject(i).get(JSON_FIELD_WIND).toString();
+                    return prediction.getJSONObject(i).get(JSON_FIELD_WIND).toString();
                 } else {
-                    return results.getJSONObject(i).get(JSON_FIELD_WEATHER).toString();
+                    return prediction.getJSONObject(i).get(JSON_FIELD_WEATHER).toString();
                 }
             }
         }
@@ -48,11 +48,11 @@ public class Forecast {
         return "";
     }
 
-    private JSONArray getPrediction(String woeid) throws IOException {
+    private JSONArray getPrediction(String cityId) throws IOException {
         // Find the predictions for the city
         HttpRequestFactory requestFactory = new NetHttpTransport().createRequestFactory();
         HttpRequest request = requestFactory.buildGetRequest(
-                new GenericUrl(URL_PREDICT_WEATHER + woeid));
+                new GenericUrl(URL_PREDICT_WEATHER + cityId));
         String rawResponse = request.execute().parseAsString();
         return new JSONObject(rawResponse).getJSONArray(JSON_FIELD_PREDICTION);
     }
