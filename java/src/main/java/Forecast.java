@@ -23,16 +23,13 @@ public class Forecast {
     private static final String JSON_FIELD_WIND = "wind_speed";
     private static final String JSON_FIELD_WEATHER = "weather_state_name";
 
+    private SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT);
+
     public String predict(String city, Date datetime, boolean wind) throws IOException {
-        if (!isPredictionAvailable(datetime)) {
+        Date date = checkDate(datetime);
+        if (!isPredictionAvailable(date)) {
             return "";
         }
-
-        // When date is not provided we look for the current prediction
-        if (datetime == null) {
-            datetime = new Date();
-        }
-        String format = new SimpleDateFormat(DATE_FORMAT).format(datetime);
 
         // Find the id of the city on metawheather
         HttpRequestFactory requestFactory
@@ -69,5 +66,12 @@ public class Forecast {
         long today = new Date().getTime();
         Date oneWeekLater = new Date(today + (ONE_DAY * 6));
         return datetime.before(oneWeekLater);
+    }
+
+    private Date checkDate(Date datetime){
+        if (datetime == null) {
+            datetime = new Date();
+        }
+        return datetime;
     }
 }
