@@ -56,23 +56,23 @@ public class HttpForecast implements IForecast {
         return prediction;
     }
 
-
-    private JSONArray getOneWeekPredictions(String cityId) throws IOException {
+    private String doHttpRequest(String url, String param) throws IOException {
         HttpRequestFactory requestFactory = new NetHttpTransport().createRequestFactory();
         HttpRequest request = requestFactory.buildGetRequest(
-                new GenericUrl(URL_PREDICT_WEATHER + cityId));
+                new GenericUrl(url + param));
         String rawResponse = request.execute().parseAsString();
-        return new JSONObject(rawResponse).getJSONArray(JSON_FIELD_PREDICTION);
+        return rawResponse;
+    }
+
+    private JSONArray getOneWeekPredictions(String cityId) throws IOException {
+        String response = doHttpRequest(URL_PREDICT_WEATHER,cityId);
+        return new JSONObject(response).getJSONArray(JSON_FIELD_PREDICTION);
     }
 
 
     private String getCityId(String city) throws IOException {
-        HttpRequestFactory requestFactory
-                = new NetHttpTransport().createRequestFactory();
-        HttpRequest request = requestFactory.buildGetRequest(
-                new GenericUrl(URL_SEARCH_CITY + city));
-        String rawResponse = request.execute().parseAsString();
-        JSONArray jsonArray = new JSONArray(rawResponse);
+        String response = doHttpRequest(URL_SEARCH_CITY, city);
+        JSONArray jsonArray = new JSONArray(response);
         return jsonArray.getJSONObject(0).get(JSON_FIELD_CITY_ID).toString();
     }
 
