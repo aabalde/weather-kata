@@ -5,7 +5,7 @@ public class Prediction {
     String wind;
 
     public Prediction() {
-        
+
     }
 
     public Prediction(String weather, String wind) {

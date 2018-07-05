@@ -13,7 +13,7 @@ public class WeatherKataTest {
 
     // https://www.metaweather.com/api/location/766273/
     @Test
-    public void find_the_weather_of_today() throws IOException, ParseException {
+    public void find_the_weather_of_today() throws Exception {
         Forecast forecast = new Forecast();
 
         String prediction = forecast.predictWeather("Madrid",null);
@@ -22,7 +22,7 @@ public class WeatherKataTest {
         assertTrue("I don't know how to test it", true);
     }
     @Test
-    public void find_the_weather_of_any_day() throws IOException, ParseException {
+    public void find_the_weather_of_any_day() throws Exception {
         Forecast forecast = new Forecast();
 
         Date tomorrow = new Date(new Date().getTime() + ONE_DAY);
@@ -32,7 +32,7 @@ public class WeatherKataTest {
         assertTrue("I don't know how to test it", true);
     }
     @Test
-    public void find_the_wind_of_any_day() throws IOException, ParseException {
+    public void find_the_wind_of_any_day() throws Exception {
         Forecast forecast = new Forecast();
 
         String prediction = forecast.predictWind("Madrid",null);
@@ -42,7 +42,7 @@ public class WeatherKataTest {
     }
 
     @Test
-    public void there_is_no_prediction_for_more_than_5_days() throws IOException, ParseException {
+    public void there_is_no_prediction_for_more_than_5_days() throws Exception {
         Forecast forecast = new Forecast();
 
         Date tomorrow = new Date(new Date().getTime() + (ONE_DAY * 6));
