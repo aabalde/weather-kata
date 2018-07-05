@@ -30,15 +30,11 @@ public class Forecast {
         if (!isPredictionAvailable(date)) {
             return "";
         }
+        String woeid = getCityId(city);
+        HttpRequestFactory requestFactory;
+        HttpRequest request;
+        String rawResponse;
 
-        // Find the id of the city on metawheather
-        HttpRequestFactory requestFactory
-                = new NetHttpTransport().createRequestFactory();
-        HttpRequest request = requestFactory.buildGetRequest(
-                new GenericUrl(URL_SEARCH_CITY + city));
-        String rawResponse = request.execute().parseAsString();
-        JSONArray jsonArray = new JSONArray(rawResponse);
-        String woeid = jsonArray.getJSONObject(0).get(JSON_FIELD_CITY_ID).toString();
 
         // Find the predictions for the city
         requestFactory = new NetHttpTransport().createRequestFactory();
@@ -60,6 +56,17 @@ public class Forecast {
         }
 
         return "";
+    }
+
+    private String getCityId(String city) throws IOException {
+        // Find the id of the city on metawheather
+        HttpRequestFactory requestFactory
+                = new NetHttpTransport().createRequestFactory();
+        HttpRequest request = requestFactory.buildGetRequest(
+                new GenericUrl(URL_SEARCH_CITY + city));
+        String rawResponse = request.execute().parseAsString();
+        JSONArray jsonArray = new JSONArray(rawResponse);
+        return jsonArray.getJSONObject(0).get(JSON_FIELD_CITY_ID).toString();
     }
 
     private boolean isPredictionAvailable(Date datetime) {
