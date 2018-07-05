@@ -30,6 +30,7 @@ public class Forecast {
         if (!isPredictionAvailable(date)) {
             return "";
         }
+
         String cityId = getCityId(city);
         JSONArray prediction = getPrediction(cityId);
 
@@ -49,7 +50,6 @@ public class Forecast {
     }
 
     private JSONArray getPrediction(String cityId) throws IOException {
-        // Find the predictions for the city
         HttpRequestFactory requestFactory = new NetHttpTransport().createRequestFactory();
         HttpRequest request = requestFactory.buildGetRequest(
                 new GenericUrl(URL_PREDICT_WEATHER + cityId));
@@ -58,7 +58,6 @@ public class Forecast {
     }
 
     private String getCityId(String city) throws IOException {
-        // Find the id of the city on metawheather
         HttpRequestFactory requestFactory
                 = new NetHttpTransport().createRequestFactory();
         HttpRequest request = requestFactory.buildGetRequest(
