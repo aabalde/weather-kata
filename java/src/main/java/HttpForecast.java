@@ -28,13 +28,14 @@ public class HttpForecast implements IForecast {
 
     @Override
     public Prediction predict(String city, Date date) throws Exception {
+        Date dateFormatted = formatDate(date);
         if (!isPredictionAvailable(date)) {
             throw new ForecastException("Prediction not available. Exceeds the 5 days limit");
         }
 
         String cityId = getCityId(city);
         JSONArray predictions = getOneWeekPredictions(cityId);
-        JSONObject predictionJson = getPrediction(date, predictions);
+        JSONObject predictionJson = getPrediction(dateFormatted, predictions);
 
         Prediction prediction = new Prediction(predictionJson.get(JSON_FIELD_WEATHER).toString(),
                 predictionJson.get(JSON_FIELD_WIND).toString());
@@ -79,5 +80,9 @@ public class HttpForecast implements IForecast {
         long today = new Date().getTime();
         Date oneWeekLater = format.parse(format.format(new Date(today + (ONE_DAY * 6))));
         return datetime.before(oneWeekLater);
+    }
+
+    private Date formatDate(Date date) throws ParseException {
+        return format.parse(format.format(date));
     }
 }

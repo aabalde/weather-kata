@@ -33,7 +33,7 @@ public class Forecast {
     }
 
     private Date checkDate(Date datetime) {
-        Date date = null;
+        Date date = datetime;
         if (datetime == null) {
             date = new Date();
         }
