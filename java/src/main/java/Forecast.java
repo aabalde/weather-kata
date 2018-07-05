@@ -32,7 +32,7 @@ public class Forecast {
         }
 
         String cityId = getCityId(city);
-        JSONArray prediction = getPrediction(cityId);
+        JSONArray predictions = getOneWeekPredictions(cityId);
 
         for (int i = 0; i < prediction.length(); i++) {
 //            // When the date is the expected
@@ -49,7 +49,7 @@ public class Forecast {
         return "";
     }
 
-    private JSONArray getPrediction(String cityId) throws IOException {
+    private JSONArray getOneWeekPredictions(String cityId) throws IOException {
         HttpRequestFactory requestFactory = new NetHttpTransport().createRequestFactory();
         HttpRequest request = requestFactory.buildGetRequest(
                 new GenericUrl(URL_PREDICT_WEATHER + cityId));
