@@ -60,22 +60,35 @@ public class WeatherKataTest {
 
     @Test
     public void find_the_weather_of_any_day() throws Exception {
-        Forecast forecast = new Forecast();
-
         Date tomorrow = new Date(new Date().getTime() + ONE_DAY);
 
-        String prediction = forecast.predictWeather("Madrid",tomorrow);
-        System.out.println("Tomorrow: " + prediction);
-        assertTrue("I don't know how to test it", true);
+        String expectedWeather = "Sunny";
+        String expectedWind = "4.5";
+        Prediction expectedPrediction = new Prediction(expectedWeather,expectedWind);
+
+        IForecast serviceStub = Mockito.mock(IForecast.class);
+        when(serviceStub.predict("Madrid", tomorrow)).thenReturn(expectedPrediction);
+
+        Forecast forecast = new Forecast(serviceStub);
+        String predictedWeather = forecast.predictWeather("Madrid",tomorrow);
+
+        assertEquals(expectedWeather, predictedWeather);
     }
     @Test
     public void find_the_wind_of_any_day() throws Exception {
-        Forecast forecast = new Forecast();
+        Date tomorrow = new Date(new Date().getTime() + ONE_DAY*3);
 
-        String prediction = forecast.predictWind("Madrid",null);
+        String expectedWeather = "Sunny";
+        String expectedWind = "4.5";
+        Prediction expectedPrediction = new Prediction(expectedWeather,expectedWind);
 
-        System.out.println("Wind: " + prediction);
-        assertTrue("I don't know how to test it", true);
+        IForecast serviceStub = Mockito.mock(IForecast.class);
+        when(serviceStub.predict("Madrid", tomorrow)).thenReturn(expectedPrediction);
+
+        Forecast forecast = new Forecast(serviceStub);
+        String predictedWind = forecast.predictWind("Madrid",tomorrow);
+
+        assertEquals(expectedWind, predictedWind);
     }
 
     @Test(expected = ForecastException.class)
